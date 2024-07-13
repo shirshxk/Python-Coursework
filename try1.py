@@ -133,11 +133,6 @@ def cleanup(adapter):
     clear_screen()
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as e:
-        print(f'{RED}An error occurred: {e}{DEFAULT}')
-        if 'adapter' in locals():
-            cleanup(adapter)
+    main()
 
 
