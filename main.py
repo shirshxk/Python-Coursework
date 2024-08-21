@@ -1,5 +1,4 @@
-!#/usr/bin/python3
-
+#!/usr/bin/python3
 import os
 from time import sleep
 
@@ -60,6 +59,8 @@ def select_adapter(devices):
             adapter = int(input('\nSelect Adapter: '))
             if 0 <= adapter < len(devices):
                 return adapter
+            else:
+                print(f'{RED}Invalid input, try again.{DEFAULT}')
         except ValueError:
             print(f'{RED}Invalid input, try again.{DEFAULT}')
 
@@ -83,7 +84,7 @@ def display_networks(networks):
     for i, net in networks.items():
         signal_color = get_signal_color(int(net['SIGNAL']))
         print(f"{i:<3}    {net['BSSID']}    {net['SSID']:<{l_ssid}}", end="")
-        print("    {signal_color}{net['SIGNAL']:<3}{DEFAULT}    {net['CHANNEL']}")
+        print(f"    {signal_color}{net['SIGNAL']:<3}{DEFAULT}    {net['CHANNEL']}")
 
 def get_signal_color(signal_strength):
     if signal_strength > 50:
@@ -99,12 +100,14 @@ def select_network(networks):
             network = int(input('\nSelect Network: '))
             if 0 <= network < len(networks):
                 return networks[network]
+            else:
+                print(f'{RED}Invalid input, try again.{DEFAULT}')
         except ValueError:
             print(f'{RED}Invalid input, try again.{DEFAULT}')
 
 def start_monitor_mode(adapter):
     os.system('sudo airmon-ng check kill > /dev/null 2>&1')
-    os.system(f'sudo airmon-ng start {adapter}')
+    os.system(f'sudo airmon-ng start {adapter} > /dev/null 2>&1')
 
 def display_network_details(network):
     net = network
@@ -133,10 +136,10 @@ def clear_screen():
 def cleanup(adapter):
     clear_screen()
     print(f'Disabling Monitor Mode On {adapter}')
-    os.system(f'sudo airmon-ng stop {adapter}mon')
+    sleep(2)
+    os.system(f'sudo airmon-ng stop {adapter}mon > /dev/null 2>&1')
     clear_screen()
 
 if __name__ == '__main__':
     main()
-
 
